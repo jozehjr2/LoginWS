@@ -19,8 +19,10 @@ import model.User;
 /**
  *
  * @author Junior
+ * 
+ * CONSUMER OF WEB SERVICE
  */
-public class ConsumerWS {
+public class HttpWS {
     
     private final String USER_AGENT = "Google Chrome 76.0";
     
@@ -29,14 +31,18 @@ public class ConsumerWS {
         //insertPost();
         
         //GET
-        showUser();
+        //showUser();
         
+        //DELETE
+        //deleteUser();
         
+        //PUT
+        updateUser();
     }
     
     //SHOW USER VIA GET
     private static void showUser() throws Exception{
-        ConsumerWS http = new ConsumerWS(); //Instantiate the class itself - HTTP EXAMPLE
+        HttpWS http = new HttpWS(); //Instantiate the class itself - HTTP EXAMPLE
                
         Gson g = new Gson();
         User u = new User();
@@ -56,7 +62,7 @@ public class ConsumerWS {
     
     //INSERT VIA POST
     private static void insertPost() throws Exception{
-        ConsumerWS http = new ConsumerWS(); //Instantiate the class itself - HTTP EXAMPLE
+        HttpWS http = new HttpWS(); //Instantiate the class itself - HTTP EXAMPLE
                
         Gson g = new Gson();
         User user = new User();
@@ -82,6 +88,59 @@ public class ConsumerWS {
         String url = "http://localhost:8080/LoginWS/webresources/accounts/post/user/insert";
 
         http.sendPost(url, json, "POST");
+    }
+    
+    //HTTP PUT request
+    public static void updateUser() throws Exception{
+        HttpWS http = new HttpWS();
+               
+        Gson g = new Gson();
+        User user = new User();
+
+        Type userType = new TypeToken<User>(){}.getType();
+        Scanner enterKey = new Scanner(System.in);
+        
+        //PUT
+        System.out.println("\n --- UPDATE \n");
+        System.out.println("\nName: ");
+        user.setName(enterKey.nextLine());
+        
+        System.out.println("\nLogin: ");
+        user.setLogin(enterKey.nextLine());
+        
+        System.out.println("\nEmail: ");
+        user.setEmail(enterKey.nextLine());
+        
+        System.out.println("\nPassword: ");
+        user.setPassword(enterKey.nextLine());
+        
+        System.out.println("\nType of account? (Admin or Comum) ");
+        user.setType(enterKey.nextLine());
+        
+        String json = g.toJson(user,userType);
+        String url = "http://localhost:8080/LoginWS/webresources/accounts/user/update";
+
+        http.sendPost(url, json, "PUT");
+    }
+    
+    //HTTP DELETE request
+    public static void deleteUser() throws Exception{
+        HttpWS http = new HttpWS();
+               
+        Gson g = new Gson();
+        User u = new User();
+
+        Type userType = new TypeToken<User>(){}.getType();
+        Scanner enterKey = new Scanner(System.in);
+        
+        System.out.println("\nType the login that you want to delete: ");
+        String login = enterKey.nextLine();        
+
+        //DELETE
+        String callWS = "http://localhost:8080/LoginWS/webresources/accounts/user/delete/"+login;
+        String ret = http.sendGet(callWS,"DELETE");
+
+        System.out.println(ret);
     }
     
     //HTTP GET request

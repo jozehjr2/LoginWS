@@ -18,6 +18,7 @@ import java.util.List;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -106,10 +107,32 @@ public class AccountsResource {
         return dao.insert(user);
     }
     
+    //SEND DELETE USERS
+    @DELETE
+    @Path("user/delete/{login}")
+    public boolean delete(@PathParam("login") String login){
+        User u = new User();
+        u.setLogin(login);
+        
+        UserDAO dao = new UserDAO();
+        u = dao.search(u);
+        
+        return dao.delete(u);
+    }
     
+    //SEND PUT - UPDATE REGISTER OF USERS
     @PUT
-    @Consumes(MediaType.APPLICATION_XML)
-    public void putXml(String content) {
+    @Consumes("application/json")
+    @Path("user/update")
+    public void update(String content) {
+        Gson g = new Gson();
+        User u = (User) g.fromJson(content, User.class);
+        UserDAO dao = new UserDAO();
+        dao.update(u);
         
     }
+    
+    
+    
+    
 }
